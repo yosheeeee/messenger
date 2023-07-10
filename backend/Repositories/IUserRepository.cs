@@ -10,11 +10,12 @@ namespace backend.Repositories
     {
         public List<User> GetUsers();
 
-        public Task Registration(string name, string password );
-
         public User GetUser(Guid id);
 
+        public User GetUserByName(string name);
 
+        public void AddUser(User user);
 
+        User GetUserById(Guid id);
     }
 }
