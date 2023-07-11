@@ -17,5 +17,9 @@ namespace backend.Repositories
         public void AddUser(User user);
 
         User GetUserById(Guid id);
+
+        Dialog GetDialog(Guid userId,string companionName);
+
+        bool SendMessage(Guid fromId, string toName, string message);
     }
 }

@@ -36,5 +36,30 @@ namespace backend.Repositories
         {
             return users.Where(user => user.Id == id).SingleOrDefault();
         }
+
+        public Dialog GetDialog(Guid userId,string companionName)
+        {
+            User user = GetUserById(userId);
+            return user.dialogs.Where(pair => pair.Key == companionName).Select(pair => pair.Value).SingleOrDefault();
+        }
+
+        public bool SendMessage(Guid fromId, string toName, string message)
+        {
+            User fromUser = GetUserById(fromId);
+            if (fromUser== default) return false;
+            User toUser = GetUserByName(toName);
+            if (toUser== default) return false;
+            Dialog dialog = fromUser.dialogs.Where(pair => pair.Key == toUser.UserName).Select(pair => pair.Value).SingleOrDefault();
+            if (dialog == default){
+                dialog = new Dialog();
+                dialog.messages.Add(new Message() {message = message , senderName = fromUser.UserName});
+                fromUser.dialogs.Add(toName,dialog);
+                toUser.dialogs.Add(fromUser.UserName,dialog);
+            }else{
+                dialog.messages.Add(new Message() {message = message , senderName = fromUser.UserName}); 
+            }
+            return true;
+
+        }
     }
 }

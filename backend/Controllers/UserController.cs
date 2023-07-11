@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace backend.Controllers
 {
     [ApiController]
-    [Route("api/users")]
+    [Route("api/messenger")]
     public class UserController : ControllerBase
     {
   
@@ -31,7 +31,7 @@ namespace backend.Controllers
         }
 
         [HttpGet]
-        [Route("/getusers")]
+        [Route("/users")]
         public IEnumerable<User> GetUsers(){
             var items = repo.GetUsers();
             return items;
@@ -43,6 +43,23 @@ namespace backend.Controllers
             User user = repo.GetUserById(id);
             if (user == default) return NotFound();
             else return  user;
+        }
+
+        [HttpGet]
+        [Route("/dialog/{userId}/{companionName}")]
+        public ActionResult<Dialog> GetDialogByCompanion(Guid userId, string companionName )
+        {
+            Dialog dialog = repo.GetDialog(userId,companionName);
+            if (dialog == default) return BadRequest("диалог не найден");
+            else return dialog;
+        }
+
+        [HttpPost]
+        [Route("/sendmessage/{userId}/{companionName}/{message}")]
+        public ActionResult SendMessage(Guid userId, string companionName, string message){
+            bool isSended = repo.SendMessage(userId, companionName,message);
+            if (!isSended) return BadRequest("сообщение не было отправленно");
+            else return Ok();
         }
     }
 }
