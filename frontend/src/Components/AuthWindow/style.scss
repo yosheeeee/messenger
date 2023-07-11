@@ -1,0 +1,23 @@
+.modalwindow {
+  position: fixed;
+  z-index: 10;
+  width: 600px;
+  height: 400px;
+  background-color: whitesmoke;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+
+  &.closed{
+    display: none;
+  }
+}
+.modallayout{
+  z-index: 9;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  &.closed{
+    display: none;
+  }
+}

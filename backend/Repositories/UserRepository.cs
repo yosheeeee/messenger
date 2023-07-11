@@ -15,15 +15,30 @@ namespace backend.Repositories
             {
                 Id = Guid.NewGuid(), UserName = "Egor", Password = "123", dialogs = new Dictionary<string, Dialog>()
                 {
-                    {"Kirill",
+                    {
+                        "Kirill",
                         new Dialog()
                         {
                             messages = new List<Message>()
                                 { new() { senderName = "Egor", message = "привет лох" } }
-                        }}
+                        }
+                    }
                 }
             },
-            new User { Id = Guid.NewGuid(), UserName = "Kirill", Password = "234",dialogs = new()}
+            new User
+            {
+                Id = Guid.NewGuid(), UserName = "Kirill", Password = "234", dialogs = new()
+                {
+                    {
+                        "Egor",
+                        new Dialog()
+                        {
+                            messages = new List<Message>()
+                                { new() { senderName = "Egor", message = "привет лох" } }
+                        }
+                    }
+                }
+            }
         };
 
         public User GetUser(Guid id)
@@ -67,7 +82,7 @@ namespace backend.Repositories
                 .SingleOrDefault();
             if (dialog == default)
             {
-                dialog = new Dialog() { messages = new List<Message>()};
+                dialog = new Dialog() { messages = new List<Message>() };
                 dialog.messages.Add(new Message() { message = message, senderName = fromUser.UserName });
                 fromUser.dialogs.Add(toName, dialog);
                 toUser.dialogs.Add(fromUser.UserName, dialog);

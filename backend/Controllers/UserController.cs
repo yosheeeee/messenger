@@ -32,17 +32,17 @@ namespace backend.Controllers
 
         [HttpGet]
         [Route("/users")]
-        public IEnumerable<User> GetUsers(){
+        public IEnumerable<UserAsDto> GetUsers(){
             var items = repo.GetUsers();
-            return items;
+            return items.Select(user => user.AsDto());
         }
 
         [HttpGet]
         [Route("/user/{id}")]
-        public ActionResult<User> GetUser(Guid id){
+        public ActionResult<UserAsDto> GetUser(Guid id){
             User user = repo.GetUserById(id);
             if (user == default) return NotFound();
-            else return  user;
+            else return  user.AsDto();
         }
 
         [HttpGet]
