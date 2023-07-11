@@ -11,8 +11,6 @@ namespace backend.Models
         public String UserName {get; init;}
         public String Password {get;init;}
 
-        public Dictionary<String, Dialog> dialogs = new();
-
-
+        public Dictionary<String, Dialog> dialogs { get; init; }
     }
 }

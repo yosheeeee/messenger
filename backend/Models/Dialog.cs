@@ -4,7 +4,9 @@ namespace backend.Models;
 
 public class Dialog
 {
-    public List<Message> messages = new();
+    public List<Message> messages { get; init; }
 
-    public Guid DialogID { get; init; }
+    public Guid DialogID = Guid.NewGuid();
+
+
 }

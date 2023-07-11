@@ -9,10 +9,22 @@ namespace backend.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        public List<User> users = new List<User>( new User[] {
-            new User{Id = Guid.NewGuid(), UserName = "Egor", Password = "123"},
-            new User{Id = Guid.NewGuid(), UserName = "Kirill", Password = "234"}}
-        );
+        public List<User> users = new List<User>()
+        {
+            new User
+            {
+                Id = Guid.NewGuid(), UserName = "Egor", Password = "123", dialogs = new Dictionary<string, Dialog>()
+                {
+                    {"Kirill",
+                        new Dialog()
+                        {
+                            messages = new List<Message>()
+                                { new() { senderName = "Egor", message = "привет лох" } }
+                        }}
+                }
+            },
+            new User { Id = Guid.NewGuid(), UserName = "Kirill", Password = "234",dialogs = new()}
+        };
 
         public User GetUser(Guid id)
         {
@@ -24,11 +36,13 @@ namespace backend.Repositories
             return users;
         }
 
-        public  User GetUserByName(string name){
-            return  users.Where(user => user.UserName.ToLower() == name.ToLower()).SingleOrDefault();
+        public User GetUserByName(string name)
+        {
+            return users.Where(user => user.UserName.ToLower() == name.ToLower()).SingleOrDefault();
         }
 
-        public void AddUser(User user){
+        public void AddUser(User user)
+        {
             users.Add(user);
         }
 
@@ -37,7 +51,7 @@ namespace backend.Repositories
             return users.Where(user => user.Id == id).SingleOrDefault();
         }
 
-        public Dialog GetDialog(Guid userId,string companionName)
+        public Dialog GetDialog(Guid userId, string companionName)
         {
             User user = GetUserById(userId);
             return user.dialogs.Where(pair => pair.Key == companionName).Select(pair => pair.Value).SingleOrDefault();
@@ -46,20 +60,24 @@ namespace backend.Repositories
         public bool SendMessage(Guid fromId, string toName, string message)
         {
             User fromUser = GetUserById(fromId);
-            if (fromUser== default) return false;
+            if (fromUser == default) return false;
             User toUser = GetUserByName(toName);
-            if (toUser== default) return false;
-            Dialog dialog = fromUser.dialogs.Where(pair => pair.Key == toUser.UserName).Select(pair => pair.Value).SingleOrDefault();
-            if (dialog == default){
-                dialog = new Dialog();
-                dialog.messages.Add(new Message() {message = message , senderName = fromUser.UserName});
-                fromUser.dialogs.Add(toName,dialog);
-                toUser.dialogs.Add(fromUser.UserName,dialog);
-            }else{
-                dialog.messages.Add(new Message() {message = message , senderName = fromUser.UserName}); 
+            if (toUser == default) return false;
+            Dialog dialog = fromUser.dialogs.Where(pair => pair.Key == toUser.UserName).Select(pair => pair.Value)
+                .SingleOrDefault();
+            if (dialog == default)
+            {
+                dialog = new Dialog() { messages = new List<Message>()};
+                dialog.messages.Add(new Message() { message = message, senderName = fromUser.UserName });
+                fromUser.dialogs.Add(toName, dialog);
+                toUser.dialogs.Add(fromUser.UserName, dialog);
             }
-            return true;
+            else
+            {
+                dialog.messages.Add(new Message() { message = message, senderName = fromUser.UserName });
+            }
 
+            return true;
         }
     }
 }

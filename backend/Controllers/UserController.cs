@@ -25,7 +25,7 @@ namespace backend.Controllers
         public async Task<IActionResult> AddUser(string name , string password){
             if (repo.GetUserByName(name) != default) return BadRequest("user with this name already exist");
                 Guid id = Guid.NewGuid();
-                User user = new User {UserName = name, Password = password, Id = id };
+                User user = new User {UserName = name, Password = password, Id = id , dialogs = new()};
                 repo.AddUser(user);
                 return Ok(id);
         }
